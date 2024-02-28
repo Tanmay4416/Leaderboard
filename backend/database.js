@@ -41,6 +41,7 @@ const createUser = async (Uid,Name,Score,Country,Timestamp) => {
 };
 
 
+// console.log(getUserRankById('24e63b94-be7e-4edb-8c1a-7053220db6d6'));
 // getAllData().then((res) => console.log(res));
 // createUser('3','anmay',0,'IN');
 
