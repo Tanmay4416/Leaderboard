@@ -21,10 +21,19 @@ app.get('/', (req,res) => {
 
 app.get('/leaderboard', (req,res) => {
     let {country} = req.query;
-    const display = (result) => {
+    const displayCurr = (result) => {
         let str = `<ol>`;
                 result.map((user) => {
                     str += `<li>Name : ${user.Name} | UID : ${user.UID} | Score : ${user.Score}</li>`;
+                })
+                str += `</ol>`;
+                res.send(str);
+    }
+
+    const displayPrev = (result) => {
+        let str = `<ol>`;
+                result.map((user) => {
+                    str += `<li>Name : ${user.Name} | UID : ${user.UID} | Score : ${user.Score}</li> | Country : ${user.Country}`;
                 })
                 str += `</ol>`;
                 res.send(str);
@@ -34,7 +43,7 @@ app.get('/leaderboard', (req,res) => {
         getCurrentLeaderboard().then((result) => {
             if(result) {
                 // console.log(result);
-                display(result);
+                displayCurr(result);
             } else {
                 res.status(400).json('no users found');
             }
@@ -43,7 +52,7 @@ app.get('/leaderboard', (req,res) => {
         getOldLeaderboard(country).then((result) => {
             if(result) {
                 // console.log(result);
-                display(result);
+                displayPrev(result);
             } else {
                 res.status(400).json('no users found');
             }
