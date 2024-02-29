@@ -7,20 +7,29 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const str = `<h4>API for this week's leaderboard :  <em>https://leaderboard-1gbs.onrender.com/leaderboard</em></h4> <h4>API for previous week's leaderboard by country :  <em>https://leaderboard-1gbs.onrender.com/leaderboard?country={country's 2 letter ISO code}</em><ul><li style="color:MediumSeaGreen"><p style="color:black">example : </p><em>https://leaderboard-1gbs.onrender.com/leaderboard?country=IN</em></li></ul></h4> <h4>API for User's rank :  <em>https://leaderboard-1gbs.onrender.com/leaderboard/rank?id={User_Id}</em><ul><li style="color:DodgerBlue;"}><p style="color:black">example : </p><em>https://leaderboard-1gbs.onrender.com/leaderboard/rank?id=00148f01-15ae-4fdf-92b0-0cf02c79901c</em></li></ul></h4>`;
+
 app.get('/', (req,res) => {
-    res.send("<h4>For this week's leaderboard : https://leaderboard-1gbs.onrender.com/leaderboard</h4>");
+    res.send(str);
 });
 
 
 app.get('/leaderboard', (req,res) => {
     let {country} = req.query;
-    // country = country.slice(1);
+    const display = (result) => {
+        let str = `<ol>`;
+                result.map((user) => {
+                    str += `<li>Name : ${user.Name} | UID : ${user.UID} | Score : ${user.Score}</li>`;
+                })
+                str += `</ol>`;
+                res.send(str);
+    }
 
     if(!country) {
         getCurrentLeaderboard().then((result) => {
             if(result) {
                 // console.log(result);
-                res.json(result);
+                display(result);
             } else {
                 res.status(400).json('no users found');
             }
@@ -29,7 +38,7 @@ app.get('/leaderboard', (req,res) => {
         getOldLeaderboard(country).then((result) => {
             if(result) {
                 // console.log(result);
-                res.json(result);
+                display(result);
             } else {
                 res.status(400).json('no users found');
             }
@@ -43,7 +52,7 @@ app.get('/leaderboard/rank', (req,res) => {
     getUserRankById(id).then((result) => {
         if(result) {
             console.log('Rank: ',result[0]['COUNT(*)']);
-            res.json(result[0]);
+            res.send(`Rank : ${result[0]['COUNT(*)']}`);
         } else {
             res.status(400).json('no such user found');
         }
