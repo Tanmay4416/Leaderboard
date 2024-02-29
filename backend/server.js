@@ -7,6 +7,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.get('https://leaderboard-1gbs.onrender.com/', (req,res) => {
+    res.send("<h4>For this week's leaderboard : https://leaderboard-1gbs.onrender.com/leaderboard</h4>");
+});
+
+
 app.get('/leaderboard', (req,res) => {
     let {country} = req.query;
     // country = country.slice(1);
